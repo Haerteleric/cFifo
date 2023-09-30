@@ -27,7 +27,7 @@ typedef FIFO_BUFFER_ARITHMETIC_DATA_TYPE fifoBufferArithmeticDataType_t;
 typedef struct fifoBuffer_s
 {
     fifoBufferEntryDataType_t  *buffer;
-    fifoBufferArithmeticDataType_t bufferSize;
+    const fifoBufferArithmeticDataType_t bufferSize;
     fifoBufferArithmeticDataType_t readHeadPos;
     fifoBufferArithmeticDataType_t writeHeadPos;
 }fifoBuffer_t;
