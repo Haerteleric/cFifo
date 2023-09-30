@@ -12,6 +12,9 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+#ifdef FIFO_BUFFER_CONFIG_HEADER_INCLUDE
+    #include FIFO_BUFFER_CONFIG_HEADER_INCLUDE
+#endif
 
 #ifndef FIFO_BUFFER_ENTRY_DATA_TYPE
     #define FIFO_BUFFER_ENTRY_DATA_TYPE unsigned int
@@ -162,7 +165,8 @@ inline static void fifo_discardLast(fifoBuffer_t * handle)
 inline static bool fifo_getFirst(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer)
 {
     //find pending
-    fifoBufferEntryDataType_t *temp = fifo_peakFirst(handle);
+    fifoBufferEntryDataType_t * temp = fifo_peakFirst(handle);
+
     if( temp == NULL )
     {
         return false;
@@ -183,7 +187,8 @@ inline static bool fifo_get(fifoBuffer_t * handle, fifoBufferEntryDataType_t * b
 inline static bool fifo_getLast(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer)
 {
     //find latest
-    fifoBufferEntryDataType_t *temp = fifo_peakLast(handle);
+    fifoBufferEntryDataType_t * temp = fifo_peakLast(handle);
+
     if( temp == NULL )
     {
         return false;
