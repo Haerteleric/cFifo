@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <time.h>
 /*****************************TEMPLATE INCLUDE**************************************/
-#define LINKED_LIST_BUFFER_ENTRY_DATA_TYPE unsigned int
+#define LINKED_LIST_BUFFER_ENTRY_DATA_TYPE size_t
 #include "fifoBuffer.h"
 /***********************************************************************************/
 
