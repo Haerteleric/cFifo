@@ -3,11 +3,18 @@
 #include <time.h>
 /*****************************TEMPLATE INCLUDE**************************************/
 #define FIFO_BUFFER_ENTRY_DATA_TYPE size_t
-#include "fifoBuffer.h"
+#define FIFO_BUFFER_INLINE_IMPLEMENTATION
+#define FIFO_BUFFER_STATIC_IMPLEMENTATION
+
+//following just for testing
+#define FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+#include "fifoBuffer.h" //Prototype
+#undef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+#include "fifoBuffer.h" //Implementation
 /***********************************************************************************/
 
 
-static fifoBufferEntryDataType_t s_buffer[10000];
+static fifoBufferEntryDataType_t s_buffer[1000000];
 static fifoBuffer_t s_fifoBuffer = 
 {
     .buffer = s_buffer,

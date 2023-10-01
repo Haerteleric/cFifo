@@ -1,17 +1,13 @@
 /**
  * Author:    Haerteleric
- * Created:   11.07.23
  * 
  * (c) Copyright by Eric Haertel
  * 
  * Portable Fifo Buffer template implementation
  * 
  **/
-#define _FIFO_BUFFER_TEMPLATE_HEADER_
-#include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-
 #ifdef FIFO_BUFFER_CONFIG_HEADER_INCLUDE
     #include FIFO_BUFFER_CONFIG_HEADER_INCLUDE
 #endif
@@ -27,6 +23,10 @@
 typedef FIFO_BUFFER_ENTRY_DATA_TYPE fifoBufferEntryDataType_t;
 typedef FIFO_BUFFER_ARITHMETIC_DATA_TYPE fifoBufferArithmeticDataType_t;
 
+
+#ifndef _FIFO_BUFFER_INSTANCE_STRUCT_DEFINED
+#define _FIFO_BUFFER_INSTANCE_STRUCT_DEFINED
+
 typedef struct fifoBuffer_s
 {
     fifoBufferEntryDataType_t  *buffer;
@@ -35,7 +35,20 @@ typedef struct fifoBuffer_s
     fifoBufferArithmeticDataType_t writeHeadPos;
 }fifoBuffer_t;
 
-inline static fifoBufferArithmeticDataType_t fifo_getCurrentSize(fifoBuffer_t * handle)
+#endif // _FIFO_BUFFER_INSTANCE_STRUCT_DEFINED
+
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+fifoBufferArithmeticDataType_t fifo_getCurrentSize(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     if(handle->readHeadPos <= handle->writeHeadPos) 
     {
@@ -43,28 +56,75 @@ inline static fifoBufferArithmeticDataType_t fifo_getCurrentSize(fifoBuffer_t * 
     }
     return handle->writeHeadPos + handle->bufferSize - handle->readHeadPos;
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static fifoBufferArithmeticDataType_t fifo_getFreeSize(fifoBuffer_t * handle)
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+fifoBufferArithmeticDataType_t fifo_getFreeSize(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     return handle->bufferSize - 1 - fifo_getCurrentSize(handle);
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static fifoBufferArithmeticDataType_t fifo_getMaxSize(fifoBuffer_t * handle)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+fifoBufferArithmeticDataType_t fifo_getMaxSize(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     return handle->bufferSize - 1;
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static void fifo_reset(fifoBuffer_t * handle)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+void fifo_reset(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     handle->readHeadPos = 0;
     handle->writeHeadPos = 0;
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
+
+
 
 #ifdef FIFO_BUFFER_CLEAR_MEMORY_ON_ALLOC
 #include <string.h>
 #endif
 
-inline static fifoBufferEntryDataType_t * fifo_alloc(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+fifoBufferEntryDataType_t * fifo_alloc(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     fifoBufferArithmeticDataType_t nextWriteHeadPos = ( handle->writeHeadPos + 1 ) % handle->bufferSize;
     if( nextWriteHeadPos == handle->readHeadPos)
@@ -80,8 +140,20 @@ inline static fifoBufferEntryDataType_t * fifo_alloc(fifoBuffer_t * handle)
     handle->writeHeadPos = nextWriteHeadPos;
     return allocedEntry;
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static bool fifo_put(fifoBuffer_t * handle, fifoBufferEntryDataType_t * entry)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+bool fifo_put(fifoBuffer_t * handle, fifoBufferEntryDataType_t * entry)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     fifoBufferArithmeticDataType_t nextWriteHeadPos = ( handle->writeHeadPos + 1 ) % handle->bufferSize;
     if( nextWriteHeadPos == handle->readHeadPos)
@@ -92,9 +164,13 @@ inline static bool fifo_put(fifoBuffer_t * handle, fifoBufferEntryDataType_t * e
     handle->writeHeadPos = nextWriteHeadPos;
     return true;
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
 
 inline static fifoBufferArithmeticDataType_t fifo_write(fifoBuffer_t * handle, fifoBufferEntryDataType_t * data, fifoBufferArithmeticDataType_t numEntries)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     fifoBufferArithmeticDataType_t nWritten = 0;
     while (nWritten < numEntries)
@@ -107,8 +183,20 @@ inline static fifoBufferArithmeticDataType_t fifo_write(fifoBuffer_t * handle, f
     }
     return nWritten;
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static fifoBufferEntryDataType_t * fifo_peakFirst(fifoBuffer_t * handle)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+fifoBufferEntryDataType_t * fifo_peakFirst(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     if( handle->writeHeadPos == handle->readHeadPos)
     {
@@ -116,13 +204,37 @@ inline static fifoBufferEntryDataType_t * fifo_peakFirst(fifoBuffer_t * handle)
     }
     return &handle->buffer[handle->readHeadPos];
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static fifoBufferEntryDataType_t * fifo_peak(fifoBuffer_t * handle)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+fifoBufferEntryDataType_t * fifo_peak(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     return fifo_peakFirst(handle);
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static fifoBufferEntryDataType_t * fifo_peakLast(fifoBuffer_t * handle)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+fifoBufferEntryDataType_t * fifo_peakLast(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     if( handle->writeHeadPos == handle->readHeadPos)
     {
@@ -136,33 +248,81 @@ inline static fifoBufferEntryDataType_t * fifo_peakLast(fifoBuffer_t * handle)
     
     return &handle->buffer[(handle->writeHeadPos - 1) % handle->bufferSize];
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static void fifo_discardFirst(fifoBuffer_t * handle)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+void fifo_discardFirst(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     if( handle->writeHeadPos != handle->readHeadPos)
     {
         handle->readHeadPos = ( handle->readHeadPos + 1 ) % handle->bufferSize;
     }
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static void fifo_discard(fifoBuffer_t * handle)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+void fifo_discard(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     fifo_discardFirst(handle);
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static void fifo_discardLast(fifoBuffer_t * handle)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+void fifo_discardLast(fifoBuffer_t * handle)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     if( handle->writeHeadPos != handle->readHeadPos)
     {
         if(handle->writeHeadPos == 0)
         {
-            return &handle->buffer[(handle->bufferSize - 1)];
+            handle->writeHeadPos = handle->bufferSize - 1;
         }
         handle->writeHeadPos = ( handle->writeHeadPos - 1 ) % handle->bufferSize;
     }
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static bool fifo_getFirst(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+bool fifo_getFirst(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     //find pending
     fifoBufferEntryDataType_t * temp = fifo_peakFirst(handle);
@@ -178,13 +338,37 @@ inline static bool fifo_getFirst(fifoBuffer_t * handle, fifoBufferEntryDataType_
     fifo_discardFirst(handle);
     return true;
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static bool fifo_get(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+bool fifo_get(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     return fifo_getFirst(handle, buffer);
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
-inline static bool fifo_getLast(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer)
+
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+bool fifo_getLast(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     //find latest
     fifoBufferEntryDataType_t * temp = fifo_peakLast(handle);
@@ -200,9 +384,20 @@ inline static bool fifo_getLast(fifoBuffer_t * handle, fifoBufferEntryDataType_t
     fifo_discardLast(handle);
     return true;
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
 
 
-inline static fifoBufferArithmeticDataType_t fifo_read(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer, fifoBufferArithmeticDataType_t bufferSize)
+
+#ifdef FIFO_BUFFER_INLINE_IMPLEMENTATION
+inline
+#endif 
+#ifdef FIFO_BUFFER_STATIC_IMPLEMENTATION
+static
+#endif 
+fifoBufferArithmeticDataType_t fifo_read(fifoBuffer_t * handle, fifoBufferEntryDataType_t * buffer, fifoBufferArithmeticDataType_t bufferSize)
+#ifdef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
+;
+#else
 {
     fifoBufferArithmeticDataType_t nRead = 0;
     while (nRead < bufferSize)
@@ -212,3 +407,4 @@ inline static fifoBufferArithmeticDataType_t fifo_read(fifoBuffer_t * handle, fi
     }
     return nRead;
 }
+#endif // NOT(FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION)
