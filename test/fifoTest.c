@@ -8,9 +8,9 @@
 
 //following just for testing
 #define FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
-#include "fifoBuffer.h" //Prototype
+#include "fifoBuffer_t.h" //Prototype
 #undef FIFO_BUFFER_ONLY_PROTOTYPE_DECLARATION
-#include "fifoBuffer.h" //Implementation
+#include "fifoBuffer_t.h" //Implementation
 /***********************************************************************************/
 
 
