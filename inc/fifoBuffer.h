@@ -27,6 +27,11 @@
  **/
 #include <stddef.h>
 #include <stdbool.h>
+
+#ifndef _FIFO_BUFFER_INCLUDED
+#define _FIFO_BUFFER_INCLUDED
+#endif
+
 #ifdef FIFO_BUFFER_CONFIG_HEADER_INCLUDE
     #include FIFO_BUFFER_CONFIG_HEADER_INCLUDE
 #endif
